@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.background.sync.ReminderTasks;
 import com.example.android.background.sync.WaterReminderIntentService;
+import com.example.android.background.utilities.NotificationUtils;
 import com.example.android.background.utilities.PreferenceUtilities;
 
 public class MainActivity extends AppCompatActivity implements
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements
         String formattedChargingReminders = getResources().getQuantityString(
                 R.plurals.charge_notification_count, chargingReminders, chargingReminders);
         mChargingCountDisplay.setText(formattedChargingReminders);
-
     }
 
     /**
@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements
         Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
         incrementWaterCountIntent.setAction(ReminderTasks.ACTION_INCREMENT_WATER_COUNT);
         startService(incrementWaterCountIntent);
+    }
+
+    public void testNotification(View view) {
+        NotificationUtils.remindUserBecauseCharging(this);
     }
 
     @Override
@@ -104,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (PreferenceUtilities.KEY_WATER_COUNT.equals(key)) {
             updateWaterCount();
-        } else if (PreferenceUtilities.KEY_CHARGING_REMINDER_COUNT.equals(key)) {
+        }
+        else if (PreferenceUtilities.KEY_CHARGING_REMINDER_COUNT.equals(key)) {
             updateChargingReminderCount();
         }
     }
