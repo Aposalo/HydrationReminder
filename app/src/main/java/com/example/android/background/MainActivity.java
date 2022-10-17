@@ -1,18 +1,4 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.example.android.background;
 
 import android.content.Intent;
@@ -44,31 +30,22 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** Get the views **/
-        mWaterCountDisplay = (TextView) findViewById(R.id.tv_water_count);
-        mChargingCountDisplay = (TextView) findViewById(R.id.tv_charging_reminder_count);
-        mChargingImageView = (ImageView) findViewById(R.id.iv_power_increment);
+        mWaterCountDisplay = findViewById(R.id.tv_water_count);
+        mChargingCountDisplay = findViewById(R.id.tv_charging_reminder_count);
+        mChargingImageView = findViewById(R.id.iv_power_increment);
 
-        /** Set the original values in the UI **/
         updateWaterCount();
         updateChargingReminderCount();
 
-        /** Setup the shared preference listener **/
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
-    /**
-     * Updates the TextView to display the new water count from SharedPreferences
-     */
     private void updateWaterCount() {
-        int waterCount = PreferenceUtilities.getWaterCount(this);
-        mWaterCountDisplay.setText(waterCount+"");
+        String waterCount = PreferenceUtilities.getWaterCount(this) + "";
+        mWaterCountDisplay.setText(waterCount);
     }
 
-    /**
-     * Updates the TextView to display the new charging reminder count from SharedPreferences
-     */
     private void updateChargingReminderCount() {
         int chargingReminders = PreferenceUtilities.getChargingReminderCount(this);
         String formattedChargingReminders = getResources().getQuantityString(
@@ -76,9 +53,6 @@ public class MainActivity extends AppCompatActivity implements
         mChargingCountDisplay.setText(formattedChargingReminders);
     }
 
-    /**
-     * Adds one to the water count and shows a toast
-     */
     public void incrementWater(View view) {
         if (mToast != null) mToast.cancel();
         mToast = Toast.makeText(this, R.string.water_chug_toast, Toast.LENGTH_SHORT);
@@ -95,15 +69,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /** Cleanup the shared preference listener **/
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    /**
-     * This is a listener that will update the UI when the water count or charging reminder counts
-     * change
-     */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (PreferenceUtilities.KEY_WATER_COUNT.equals(key)) {
