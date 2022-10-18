@@ -13,6 +13,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.android.background.MainActivity
 import com.example.android.background.R
+import com.example.android.background.sync.ReminderTasks
+import com.example.android.background.sync.WaterReminderIntentService
 
 /**
  * Utility class for creating hydration notifications
@@ -26,6 +28,16 @@ class NotificationUtils {
         private val WATER_REMINDER_PENDING_INTENT_ID = 3417
 
         private val WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel"
+
+        private const val ACTION_IGNORE_PENDING_INTENT_ID = 14
+
+        private const val ACTION_DRINK_PENDING_INTENT_ID = 1
+
+        fun clearAllNotifications(context: Context) {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancelAll()
+        }
 
         @JvmStatic
         fun remindUserBecauseCharging(context: Context) {
@@ -55,6 +67,8 @@ class NotificationUtils {
                         )
                     )
                     .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .addAction(drinkWaterAction(context))
+                    .addAction(ignoreReminderAction(context))
                     .setContentIntent(contentIntent(context))
                     .setAutoCancel(true)
 
@@ -82,5 +96,48 @@ class NotificationUtils {
             val res = context.resources
             return BitmapFactory.decodeResource(res, R.drawable.ic_local_drink_black_24px)
         }
+
+        private fun ignoreReminderAction(context: Context): NotificationCompat.Action {
+
+            val ignoreReminderIntent =
+                Intent(context, WaterReminderIntentService::class.java)
+
+            ignoreReminderIntent.action = ReminderTasks.ACTION_DISMISS_NOTIFICATION
+
+            val ignoreReminderPendingIntent = PendingIntent.getService(
+                context,
+                ACTION_IGNORE_PENDING_INTENT_ID,
+                ignoreReminderIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            return NotificationCompat.Action(
+                R.drawable.ic_cancel_black_24px,
+                "No, thanks.",
+                ignoreReminderPendingIntent
+            )
+        }
+
+        private fun drinkWaterAction(context: Context): NotificationCompat.Action {
+
+            val incrementWaterCountIntent =
+                Intent(context, WaterReminderIntentService::class.java)
+
+            incrementWaterCountIntent.action = ReminderTasks.ACTION_INCREMENT_WATER_COUNT
+
+            val incrementWaterPendingIntent = PendingIntent.getService(
+                context,
+                ACTION_DRINK_PENDING_INTENT_ID,
+                incrementWaterCountIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            return NotificationCompat.Action(
+                R.drawable.ic_local_drink_black_24px,
+                "I did it!",
+                incrementWaterPendingIntent
+            )
+        }
+
     }
 }
