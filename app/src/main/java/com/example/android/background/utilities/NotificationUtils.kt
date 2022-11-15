@@ -23,11 +23,11 @@ class NotificationUtils {
 
     companion object {
 
-        private val WATER_REMINDER_NOTIFICATION_ID = 1138
+        private const val WATER_REMINDER_NOTIFICATION_ID = 1138
 
-        private val WATER_REMINDER_PENDING_INTENT_ID = 3417
+        private const val WATER_REMINDER_PENDING_INTENT_ID = 3417
 
-        private val WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel"
+        private const val WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel"
 
         private const val ACTION_IGNORE_PENDING_INTENT_ID = 14
 

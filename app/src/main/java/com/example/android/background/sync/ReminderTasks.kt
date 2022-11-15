@@ -18,11 +18,11 @@ class ReminderTasks {
         }
 
         fun executeTask(context: Context, action: String) {
-
             when (action) {
                 ACTION_INCREMENT_WATER_COUNT -> incrementWaterCount(context)
                 ACTION_DISMISS_NOTIFICATION -> NotificationUtils.clearAllNotifications(context)
             }
         }
+
     }
 }

@@ -7,11 +7,12 @@ android {
 
     defaultConfig {
         applicationId "com.example.android.background"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
